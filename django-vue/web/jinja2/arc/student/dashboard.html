@@ -1,0 +1,176 @@
+{% extends 'arc/student/base.html' %}
+{% block content %}
+<div id="app" class="container-fluid dashboard-body">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header"><h4 class="title">Bacaan Asas</h4></div>
+                <div class="card-content learning-materials">
+                    <ul class="list-unstyled">
+                        {% for reading in basic_readings %}
+                            {% if final_test_act == 0 %}
+                                <li>
+                                    <div class="row" style="cursor:pointer;">
+                                        <div class="col-xs-2">
+                                            <div class="avatar"><img src="{{ static('img/books.png') }}" class="img-no-padding img-responsive"></div>
+                                        </div>
+                                        <div class="col-xs-10"><a href="{{ reading.url }}" onclick="event.preventDefault(); app.openImage(this.href); return false;">{{ reading.title }}</a></div>
+                                    </div>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <div class="row is_activated" style="cursor:pointer;">
+                                        <div class="col-xs-2">
+                                            <div class="avatar"><img src="{{ static('img/books.png') }}" class="img-no-padding img-responsive"></div>
+                                        </div>
+                                        <div class="col-xs-10"><a>{{ reading.title }}</a></div>
+                                    </div>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        <!-- li>
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <div class="avatar"><img src="{{ static('img/books.png') }}" alt="Avatar" class="img-no-padding img-responsive"></div>
+                                </div>
+                                <div class="col-xs-8">
+                                    Vokal
+                                    <br> <span class="text-muted"><small></small></span></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <div class="avatar"><img src="{{ static('img/books.png') }}" alt="Icon"
+                                                             class="img-no-padding img-responsive"></div>
+                                </div>
+                                <div class="col-xs-8">
+                                    Diftong
+                                    <br> <span class="text-muted"><small></small></span></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <div class="avatar"><img src="{{ static('img/books.png') }}" alt="Icon"
+                                                             class="img-no-padding img-responsive"></div>
+                                </div>
+                                <div class="col-xs-8">
+                                    Mari Membaca
+                                    <br> <span class="text-muted"><small></small></span></div>
+                            </div>
+                        </li -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-6">
+                    {% if final_test_act ==0 %}
+                         <a href="{{ url('test-manager', kwargs={'page_action': 'start'}) }}" title="Mula Membaca">
+                            <div data-background-color="orange" class="card card-rank">
+                                <div class="image" style="height:350px !important;"><img src="{{ static('img/' + avatar) }}" alt="Mula membaca"></div>
+                            </div>
+                         </a>
+                    {% else %}
+                        <a href="{{ url('test-manager', kwargs={'page_action': 'start'}) }}" title="mula ujian terakhir">
+                            <div data-background-color="orange" class="card card-rank">
+                                <div class="image" style="height:350px !important;"><img src="{{ static('img/test/' + avatar) }}" alt="mula ujian terakhir"></div>
+                            </div>
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <div class="card card-rank" :title="getRankName">
+                        <div class="card-content">
+                            <div class="row">
+                                <div class="col-xs-7">
+                                    <div class="numbers pull-left">
+                                        Prestasi
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="medal-container" style="margin-top:5px;">
+                                {% for t in range(total_result.trophy) %}
+                                <span style="float:left; margin-left:8px;"><img src="{{ static('img/cup-1-50.png') }}" alt="trophy"></span>
+                                {% endfor %}
+                                {% for t in range(total_result.star) %}
+                                <span style="float:left; margin-left:8px;"><img src="{{ static('img/star-1-50.png') }}" alt="trophy"></span>
+                                {% endfor %}
+                                <!--<img :src="getRankBadge" :alt="getRankName"/>-->
+                                <!--<span v-for="n in getTrophy"><i class="ti-cup"></i></span>-->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="numbers pull-left">
+                                        Skor Terakhir
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="chartStudentRank" ref="chartStudentRank" style="height: 300px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <modal v-if="showPopup" @close="showPopup = false" :imgsource="imgSrc" />
+</div>
+
+<script type="text/x-template" id="modal-template">
+    <transition name="modal">
+        <div class="modal-mask">
+            <div class="modal-wrapper">
+                <div class="modal-container">
+                    <div class="modal-header">
+                        <slot name="header">
+                            <h3>Bacaan Asas</h3>
+                        </slot>
+                    </div>
+
+                    <div class="modal-body">
+                        <slot name="body">
+                            <img class="slide" :src="imgsource">
+                        </slot>
+                    </div>
+
+                    <div class="modal-footer">
+                        <slot name="footer">
+                            <button class="modal-default-button" @click="$emit('close')">
+                            Tutup
+                            </button>
+                        </slot>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </transition>
+</script>
+{% endblock %}
+
+{% block header_script %}
+<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+{% endblock %}
+
+{% block footer_script %}
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+
+<script src="{{ static('js/dashboard.js') }}?1804002"></script>
+
+<!-------------------change----------------------->
+<script src="{{ static('js/check_final_test.js') }}"></script>
+<!-------------------end-------------------------->
+{% endblock %}

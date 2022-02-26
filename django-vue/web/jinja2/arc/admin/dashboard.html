@@ -1,0 +1,104 @@
+{% extends 'arc/admin/base.html' %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-warning text-center">
+                                <i class="ti-server"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>Bahan Bacaan</p>
+                                {% if readings_data and readings_data.total %}{{ readings_data.total }}{% else %}0{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-info text-center">
+                                <i class="ti-user"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>Jumlah Pelajar</p>
+                                {% if user_data and user_data.student %}{{ user_data.student }}{% else %}0{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if user_data and user_data.reports and user_data.reports|length > 0 %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Kemajuan Pelajar</h4>
+                    <p class="category"></p>
+                </div>
+                <div class="card-content">
+                    {% for report in user_data.reports %}
+                    <p>{{ report.class }} ({{ report.total }} Pelajar)</p>
+                    <div id="chartProgress{{loop.index}}" class="ct-chart"></div>
+                    {% endfor %}
+                    <div class="footer">
+                        <!-- div class="chart-legend">
+                            <i class="fa fa-circle text-success"></i> Excellent
+                            <i class="fa fa-circle text-warning"></i> Average
+                            <i class="fa fa-circle text-danger"></i> Requires Attention
+                        </div>
+                        <hr -->
+                        <!--div class="stats">
+                            <i class="ti-reload"></i> Updated 1 day ago
+                        </div-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+{% block header_script %}
+<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+{% endblock %}
+
+{% block footer_script %}
+{% if user_data and user_data.reports and user_data.reports|length > 0%}
+<script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+<script>
+    {% for report_data in user_data.reports %}
+    var dataSeries = {{ report_data.report }};
+    new Chartist.Bar(chartProgress{{loop.index}}, {
+            labels: ['Sangat Baik', 'Baik', 'Memerlukan perhatian', 'Tiada peringkat'],
+            series: [dataSeries,]
+        },
+        {
+            fullWidth: true,
+            chartPadding: { right: 10 },
+            axisX: { showGrid: false, showLabel: true },
+            axisY: { showLabel: true },
+            high: {{ report_data.total }},
+            low: 0,
+        });
+    {% endfor %}
+</script>
+{% endif %}
+{% endblock %}

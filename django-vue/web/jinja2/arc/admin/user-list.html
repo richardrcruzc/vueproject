@@ -1,0 +1,301 @@
+{% extends 'arc/admin/base.html' %}
+{% block content %}
+<div id = "app" class="container-fluid">
+    <div class="row" style="margin-bottom: 20px;">
+
+        <!--change-->
+        <div class="col-md-8">
+            {% for group in groups %}
+            <!--<div class="column">-->
+                <!--<div class="card card-plain active-grade">-->
+                    <!--<a href="{{ url('user-manager', kwargs={'page_action': 'group'}) }}?group_id={{ group.grade }}" class=" btn {% if group_id == group.grade %} active {% endif%}" gp="{{group.grade}}">{{ group.text }}</a>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="column">
+                <div class="card card-plain active-grade">
+                    <a href="{{ url('user-list') }}?group_id={{ group.grade }}" class=" btn {% if group_int == group.grade %} active {% endif%}" gp="{{group.grade}}">{{ group.text }}</a>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="column">
+                <div class="card card-plain">
+                    <a class=" btn add_new_group">new group</a>
+                </div>
+            </div>
+            <div class="column">
+                <div class="dropdown">
+                      <button class="dropbtn btn btn-wd">delete group</button>
+                      <div class="dropdown-content">
+                          {% for group in groups %}
+                            {% if group.text == 'ALL' %}
+                            {% else %}
+                                <a href="{{ url('delete-group') }}?group_id={{ group.grade }}" class=" btn btn-wd btn-fill">{{group.text}}</a>
+                            {% endif %}
+                          {% endfor %}
+                      </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 row">
+                <div class="column">
+                    <div class="card card-plain upload_csv">
+                        <a class=" btn">upload</a>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card card-plain">
+                        <p class="user_active"><a class=" btn">Active All</a></p>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card card-plain">
+                        <p class="user_archive"><a href="" class=" btn">Archive All</a></p>
+                    </div>
+                </div>
+             <!--end change-->
+
+                <div class="column">
+                    <div class="card card-plain">
+                        <a href="{{ url('user-manager', kwargs={'page_action': 'add'}) }}" class="pull-right btn btn-fill btn-wd">Tambah Pengguna</a>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <!--change-->
+    <div class="row input_new_group_name" style="display:none;">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="background-color:lightblue;padding-top:20px;">
+            <div class="row">
+                <label class="col-md-3 col-sm-3 col-xs-12 control-label">Group Name: </label>
+                <div class="col-md-8">
+                    <input type="number" name="new_group_name" class="form-control" min="2018" max="2030" required>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;padding-bottom:10px">
+                <div class="col-md-6"></div>
+                <div class="col-md-3">
+                    <button class="btn btn-success btn-md add_new_group_ok">Add</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-default btn-md add_new_group_cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row upload_student_data" style="display:none;">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="background-color:lightblue;padding-top:20px;">
+            <!--<form action="" method="POST" enctype="multipart/form-data" class="form-horizontal">-->
+            <!--<div class="form-group">-->
+                <!--<label for="name" class="col-md-3 col-sm-3 col-xs-12 control-label">File: </label>-->
+                <!--<div class="col-md-8">-->
+                    <!--<input type="file" name="csv_file" id="csv_file" required="True" class="form-control">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<div class="col-md-3 col-sm-3 col-xs-12 col-md-offset-3" style="margin-bottom:10px;">-->
+                    <!--<button class="btn btn-primary pull-right"> <span class="glyphicon glyphicon-upload" style="margin-right:5px;"></span>Upload </button>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</form>-->
+            <form method="post" action="/upload/" enctype="multipart/form-data">
+                {{ csrf_input }}
+                <div class="card card-login">
+                    <div class="card-content">
+                        <div class="form-group">
+                            <label>CSV File</label>
+                            <input type="file" name="csv_file" class="form-control input-no-border" required="True">
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <button type="submit" class="btn btn-wd ">upload</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<!--end change-->
+    <div class="row" style="margin-top:10px;">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="bootstrap-table">
+                        <div class="fixed-table-container" style="padding-bottom: 0px;">
+                            <div class="fixed-table-header" style="display: none;">
+                                <table></table>
+                            </div>
+                            <div class="fixed-table-body">
+                                <table id="bootstrap-table" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th style="max-width: 50px;">
+
+                                        </th>
+                                        <th class="text-center" style="max-width: 150px;" data-field="id">
+                                            <div class="th-inner ">ID</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="" data-field="type">
+                                            <div class="th-inner sortable both">Jenis</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="max-width: 150px;" data-field="last_login">
+                                            <div class="th-inner sortable both">Log Masuk Terakhir</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+
+                                        <!--change-->
+                                        <th style="max-width: 150px;" data-field="last_login">
+                                            <div class="th-inner sortable both">Status</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <!--end change-->
+
+                                        <th class="td-actions text-right" style="max-width: 150px;" data-field="actions">
+                                            <div class="th-inner ">Tindakan</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for user in user_data %}
+                                    <tr data-index="">
+                                        <td class="text-center">{{ loop.index + (pagination.number - 1) * pagination.per_page }}</td>
+                                        <!--change-->
+                                        <td class="text-center">{{ user.username }}</td>
+                                        <!---->
+                                        {% if user.role is defined %}
+                                        <td style="">{% if user.role == 0%}Admin{% elif user.role == 1%}Teacher{% elif user.role == 2%}Student{% else %}Other{% endif %}</td>
+                                        {% else %}
+                                        <td style="">N/A</td>
+                                        {% endif %}
+                                        <td style="">{{ user.last_login }}</td>
+                                        <!--change-->
+                                        <!--<td style="">{% if user.state %}<a href="{{ url('user-manager', kwargs={'page_action': 'status'}) }}?id={{ user.id }}"><button class="btn btn-sm btn-success login_student_check">Active</button></a>{% else%}<a href="{{ url('user-manager', kwargs={'page_action': 'status'}) }}?id={{ user.id }}"><button class="btn btn-sm btn-danger login_student_check">Archive</button></a>{% endif%}</td>-->
+                                        <td style="">{% if user.state %}<button class="btn btn-sm btn-success individual_state">Active</button>{% else%}<button class="btn btn-sm btn-danger individual_state">Archive</button>{% endif%}</td>
+                                        <!--end-->
+                                        <td class="td-actions text-right" style="">
+                                            <div class="table-icons">
+                                                {% if user.role is defined and user.role == 2 %}
+                                                <a rel="tooltip" title="Detail" class="btn btn-simple btn-info btn-icon table-action view"
+                                                    href="{{ url('user-manager', kwargs={'page_action': 'detail'}) }}?id={{ user.id }}">
+                                                    <i class="ti-bar-chart"></i></a>
+                                                {% endif %}
+                                                <a @click.prevent="reset({{user.id}}, '{{ user.username }}')" rel="tooltip" title="Reset kata laluan" class="btn btn-simple btn-success btn-icon table-action view"
+                                                    href="{{ url('user-manager', kwargs={'page_action': 'reset'}) }}?id={{ user.id }}">
+                                                    <i class="ti-unlock"></i></a>
+                                                <a rel="tooltip" title="Edit"
+                                                    class="btn btn-simple btn-warning btn-icon table-action edit"
+                                                    href="{{ url('user-manager', kwargs={'page_action': 'edit'}) }}?id={{ user.id }}">
+                                                    <i class="ti-pencil-alt"></i></a>
+                                                <a rel="tooltip" title="Delete"
+                                                   class="btn btn-simple btn-danger btn-icon table-action remove"
+                                                   href="{{ url('user-manager', kwargs={'page_action': 'delete'}) }}?id={{ user.id }}&page=1">
+                                                    <i class="ti-close"></i></a></div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="fixed-table-footer" style="display: none;">
+                                <table>
+                                    <tbody>
+                                    <tr></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="fixed-table-pagination">
+                                <div class="pull-right pagination">
+                                    <ul class="pagination">
+                                        <li class="page-first{% if not pagination.has_previous %} disabled{% endif %}">
+                                            <a href="{{ url('user-list') }}?group_id={{ group_id }}&page=1{% if filter_template %}&{{ filter_template }}{% endif %}">
+                                                <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                        <li class="page-pre{% if not pagination.has_previous %} disabled{% endif %}">
+                                            <a href="{{ url('user-list') }}?group_id={{ group_id }}&page={{ pagination.number - 1 }}{% if filter_template %}&{{ filter_template }}{% endif %}">‹</a>
+                                        </li>
+                                        {% if pagination.shown_pages[0] > 1 %}
+                                            <li class="page-number">
+                                                <a href="{{ url('user-list') }}?group_id={{ group_id }}&page={% if filter_template %}&{{ filter_template }}{% endif %}1">1</a>
+                                            </li>
+                                            {% if pagination.shown_pages[0] > 2 %}
+                                                <li class="">
+                                                    <a href="#"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                                </li>
+                                            {% endif %}
+                                        {% endif %}
+                                        {% for page in range(pagination.shown_pages[0], pagination.shown_pages[1]+1) %}
+                                            <li class="page-number{% if page == pagination.number %} active{% endif %}">
+                                                <a href="{{ url('user-list') }}?group_id={{ group_id }}&page={{ page }}{% if filter_template %}&{{ filter_template }}{% endif %}">{{ page }}</a>
+                                            </li>
+                                        {% endfor%}
+                                        {% if pagination.shown_pages[1] < pagination.total_page %}
+                                            <li class="">
+                                                <a href="#"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                            </li>
+                                            <li class="page-number">
+                                                <a href="{{ url('user-list') }}?group_id={{ group_id }}&page={{ pagination.total_page }}{% if filter_template %}&{{ filter_template }}{% endif %}">{{ pagination.total_page }}</a>
+                                            </li>
+                                        {% endif %}
+                                        <li class="page-next{% if not pagination.has_next %} disabled{% endif %}">
+                                            <a href="{{ url('user-list') }}?group_id={{ group_id }}&page={{ pagination.number + 1 }}{% if filter_template %}&{{ filter_template }}{% endif %}">›</a>
+                                        </li>
+                                        <li class="page-last{% if not pagination.has_next %} disabled{% endif %}">
+                                            <a href="{{ url('user-list') }}?group_id={{ group_id }}&page={{ pagination.total_page }}{% if filter_template %}&{{ filter_template }}{% endif %}">
+                                                <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<script>-->
+    <!--function in_status(id, state){-->
+        <!--alert(id);-->
+        <!--alert(state);-->
+    <!--}-->
+<!--</script>-->
+<!--<script>-->
+    <!--function in_status(id, state){-->
+        <!--alert(state);-->
+        <!--if (state==true){-->
+            <!--state = false;-->
+        <!--} else {-->
+            <!--state = true;-->
+        <!--}-->
+        <!--$.ajax({-->
+            <!--headers: { "X-CSRFToken": token },-->
+            <!--url: "/individual_status/",-->
+            <!--header: {'X-CSRFToken': '{{ csrf_token }}'},-->
+            <!--data:{-->
+                   <!--userid: id,-->
+                   <!--state:state-->
+            <!--},-->
+            <!--type: 'GET',-->
+            <!--success: function(result){-->
+                <!--href = window.location.href-->
+                <!--window.open(href, '_self')-->
+            <!--}-->
+        <!--});-->
+    <!--}-->
+<!--</script>-->
+
+{% endblock %}
+
+{% block footer_script %}
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
+
+<script src="{{ static('js/user-list.js') }}?1804001"></script>
+<script src="{{ static('js/new_mine.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,45 @@
+<div class="sidebar" data-background-color="white" data-active-color="danger">
+    <div class="logo">
+        <a href="https://arc.morilolo.com" class="simple-text">
+            Pembaca Arif
+        </a>
+    </div>
+    <div class="sidebar-wrapper">
+        <ul class="nav">
+            <li {% if page and page=='dashboard' %}class="active"{% endif %}>
+                <a href="{{ url('dashboard') }}">
+                    <i class="ti-panel"></i>
+                    <p>Utama</p>
+                </a>
+            </li>
+            <li {% if page and page=='reading' %}class="active"{% endif %}>
+                <a href="{{ url('reading-list') }}">
+                    <i class="ti-view-list-alt"></i>
+                    <p>Bahan Bacaan</p>
+                </a>
+            </li>
+            <li {% if page and page=='user' %}class="active"{% endif %}>
+                <a href="{{ url('user-list') }}">
+                    <i class="ti-user"></i>
+                    <p>Pengguna</p>
+                </a>
+            </li>
+            <!-------------------------change-------------------------->
+            {% if is_admin %}
+            <li {% if page and page=='test' %}class="active"{% endif %}>
+                <a href="{{ url('test-list') }}">
+                    <i class="ti-pencil-alt"></i>
+                    <p>Ujian</p>
+                </a>
+            </li>
+            {% endif %}
+            <!-------------------------change end------------------------->
+            <li {% if page and page=='logout' %}class="active"{% endif %}>
+                <a href="{{ url('logout') }}">
+                    <i class="ti-close"></i>
+                    <p>Log Keluar</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

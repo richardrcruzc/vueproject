@@ -1,0 +1,26 @@
+{% extends 'arc/student/base.html' %}
+{% block content %}
+<div class="container-fluid dashboard-body">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-sm-12">
+            <div class="card">
+                <div class="card-header"><h4 class="title">Pilih Avatar Anda</h4></div>
+                <div class="card-content">
+                    <div class="row">
+                        {% for avatar in avatars %}
+                        <div class="col-md-3 col-sm-6">
+                            <a href="{{ url('avatar') }}?selection={{ avatar.id }}" title="Pilih avatar ini">
+                                <div class="card card-avatar-selection">
+                                    <div class="image avatar-selection"><img src="{{ static('img/' + avatar.file) }}" alt="Avatar"></div>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

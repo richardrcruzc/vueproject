@@ -1,0 +1,103 @@
+{% extends 'arc/student/base.html' %}
+
+{% block footer_script %}
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
+
+<script src="{{ static('js/quiz.js') }}?1804001"></script>
+{% endblock %}
+{% block content %}
+<div id="app" class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card card-reading">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <!-- p>
+                                <template v-for="(word, loopIndex) in readingData.reading_component" v-if="validWord(word)" v-cloak><span>{%raw%}{{ word }}{%endraw%}</span>&#160;</template>
+                            </p -->
+                            <p v-html="readingData.reading" v-cloak></p>
+                        </div>
+                    </div>
+                    <div class="card-footer"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card card-question">
+                <div class="card-content" v-cloak>
+                    <div class="row">
+                        <h4>Soalan <span>{%raw%}{{ currentQuestionNumber }}{%endraw%}</span></h4>
+                        <p class="col-md-12" v-html="currentQuestion"></p>
+                        <div class="col-md-12">
+                            <div class="radio" v-for="(choice, loopIndex) in currentChoices">
+                                <input v-model="currentAnswer" :id="'answer-' + loopIndex" type="radio" :value="loopIndex" name="answer">
+                                <label :for="'answer-' + loopIndex">{% raw %}{{ choice.value }}{% endraw %}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="text-center">
+                                <button @click="submitAnswer" type="button" class="btn btn-wd btn-default btn-fill btn-move-right">
+                                    Jawab<span class="btn-label"><i class="ti-angle-right"></i></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <modal v-if="showPopup" @close="showPopup = false" :type="popupType" :dict="dict" :tutorial="tutorialData" />
+</div>
+
+<script type="text/x-template" id="modal-template">
+    <transition name="modal">
+        <div class="modal-mask">
+            <div class="modal-wrapper">
+                <div class="modal-container">
+                    <div class="modal-header">
+                        <slot name="header">
+                            <h3 v-if="type == 0">Kamus</h3>
+                            <h3 v-else-if="type == 1">Mari Belajar</h3>
+                        </slot>
+                    </div>
+
+                    <div class="modal-body">
+                        <slot name="body">
+                            <template v-if="type == 0">
+                                <template v-if="dict.loading">
+                                    <p>Mencari {%raw%}{{ dict.word }}{%endraw%}</p>
+                                </template>
+                                <template v-else-if="dict.error">
+                                    <p>{%raw%}{{ dict.error_desc }}{%endraw%}</p>
+                                </template>
+                                <template v-else>
+                                    <h3>{%raw%}{{ dict.word }}{%endraw%}</h3>
+                                    <p>{%raw%}{{ dict.definition }}{%endraw%}</p>
+                                </template>
+                            </template>
+                            <template v-else-if="type == 1">
+                                <img class="slide" :src="imageSource" @click="nextSlide">
+                            </template>
+                        </slot>
+                    </div>
+
+                    <div class="modal-footer">
+                        <slot name="footer">
+                            <button class="modal-default-button" @click="$emit('close')">
+                            Tutup
+                            </button>
+                        </slot>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </transition>
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+.bordered {
+    border-bottom: 1px solid #cdcdcd;
+}
+
+@media (min-width: $screen-md) {
+    .navbar {
+        .navbar-collapse.collapse,
+        .navbar-collapse.collapse.in,
+        .navbar-collapse.collapsing {
+            display: none!important;
+        }
+    }
+}
+
+@media (max-width: $screen-md) {
+    .navbar .navbar-collapse.arc-collapse {
+        display: none!important;
+    }
+
+    .navbar .navbar-collapse.collapse.in {
+        display: block!important;
+    }
+}

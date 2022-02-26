@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <!-- p>{% for score in scores%}{{ score}}<br/>{% endfor %}</p -->
+    <table border="1">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>Difficulty</td>
+                <td>Adj Score</td>
+                <td>Score</td>
+                <td>Unique Words</td>
+                <td>Total Words</td>
+                <td>Syllable</td>
+                <td>Sentence</td>
+                <td>Reading</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reading in readings %}
+            <tr>
+                <td>{{ reading.id }}</td>
+                <td>{{ reading.difficulty }}</td>
+                <td>{{ reading.adj_score }}</td>
+                <td>{{ reading.score }}</td>
+                <td>{{ reading.total_unique_word }}</td>
+                <td>{{ reading.total_word }}</td>
+                <td>{{ reading.total_syllable }}</td>
+                <td>{{ reading.total_sentence }}</td>
+                <td title="{{ reading.reading_full }}">{{ reading.reading }}</td>
+                {% for question in reading.questions %}
+                    <td>{{ question.text }}</td>
+                    {% for choice in question.choices %}
+                        <td>{{ choice.text }}</td>
+                    {% endfor %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

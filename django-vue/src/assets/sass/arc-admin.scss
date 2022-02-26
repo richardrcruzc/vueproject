@@ -1,0 +1,56 @@
+@import "paper-admin/variables";
+@import "paper-admin/mixins";
+
+//plugins css
+@import "paper-admin/plugins/animate";
+@import "paper-admin/plugins/fullcalendar";
+@import "paper-admin/plugins/chartist";
+@import "paper-admin/plugins/perfect-scrollbar";
+@import "paper-admin/plugins/jquery.jvectormap";
+
+// Core CSS
+@import "paper-admin/typography";
+@import "paper-admin/sidebar-and-main-panel";
+@import "paper-admin/buttons";
+@import "paper-admin/misc";
+@import "paper-admin/inputs";
+@import "paper-admin/progress-bars";
+@import "paper-admin/sliders";
+@import "paper-admin/forms";
+@import "paper-admin/alerts";
+@import "paper-admin/tables";
+@import "paper-admin/tooltips-and-popovers";
+@import "paper-admin/navbars";
+@import "paper-admin/footers";
+@import "paper-admin/cards";
+@import "paper-admin/timeline";
+@import "paper-admin/datetime-picker";
+@import "paper-admin/slider";
+@import "paper-admin/select";
+@import "paper-admin/labels";
+@import "paper-admin/chat-message";
+@import "paper-admin/checkbox-radio";
+
+// Fancy Stuff
+@import "paper-admin/dropdown";
+@import "paper-admin/social";
+@import "paper-admin/tags";
+@import "paper-admin/collapse";
+@import "paper-admin/carousel";
+@import "paper-admin/animated-buttons";
+@import "paper-admin/switch";
+@import "paper-admin/upload";
+@import "paper-admin/swal";
+
+@import "paper-admin/mobile-nav";
+
+// Vue
+@import "paper-admin/vue";
+
+//SCSS for Pages
+@import "paper-admin/pages";
+
+@import "paper-admin/tabs-navs-pagination";
+@import "paper-admin/circlechart";
+
+@import "paper-admin/responsive";

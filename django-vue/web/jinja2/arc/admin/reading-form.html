@@ -1,0 +1,288 @@
+{% extends 'arc/admin/base.html' %}
+{% block header_script %}
+<!-- link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css" -->
+{% endblock %}
+
+{% block footer_script %}
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
+
+<script src="{{ static('js/reading.js') }}?180219"></script>
+
+<!-- <script>
+        
+            $('#tutorialVideo').change(function() {
+                alert("gh");
+                // var i = $(this).prev('label').clone();
+                // var file = $('#tutorialVideo')[0].files[0].name;
+                // $(this).parent('label').text(file);
+            });
+        
+</script> -->
+{% endblock %}
+
+{% block content %}
+<div id="app" class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Bacaan</h4>
+                </div>
+                <div class="card-content">
+                    <form>
+                        {{ csrf_input }}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input v-model="readingData.title" class="form-control" placeholder="Judul">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <textarea v-model="readingData.reading" rows="15" class="form-control"
+                                              placeholder="Tulis bahan bacaan"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <fieldset class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" style="text-align: left;">Kesukaran</label>
+                                <div class="col-sm-4">
+                                    <input v-model="readingData.difficulty" type="number" class="form-control"
+                                           placeholder="Score">
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="row">
+                            <fieldset class="col-md-6">
+                                <div class="form-group">
+                                    <div class="row" v-if="imageUrl" v-cloak>
+                                        <span class="col-md-12">
+                                            <a :href="imageUrl" target="_blank"><i class="ti-image"></i></a>
+                                        </span>
+                                    </div>
+                                    <label>Gambar</label>
+                                    <el-upload
+                                        class="file-uploader"
+                                        name="image-uploader"
+                                        action="#"
+                                        ref="image_uploader"
+                                        :show-file-list="true"
+                                        :on-change="handleImageUploaderChange"
+                                        :auto-upload="false">
+                                            <el-button slot="trigger" size="small" type="primary">select file</el-button>
+                                            <div class="el-upload__tip" slot="tip">jpg/png files</div>
+                                    </el-upload>
+                                </div>
+                            </fieldset>
+                            <fieldset class="col-md-6">
+                                <div class="form-group">
+                                    <div class="row" v-if="audioUrl" v-cloak>
+                                        <span class="col-md-12">
+                                            <a :href="audioUrl" target="_blank"><i class="ti-image"></i></a>
+                                        </span>
+                                    </div>
+                                    <label>Audio</label>
+                                    <el-upload
+                                        class="file-uploader"
+                                        name="audio-uploader"
+                                        action="#"
+                                        ref="audio_uploader"
+                                        :show-file-list="true"
+                                        :on-change="handleAudioUploaderChange"
+                                        :auto-upload="false">
+                                            <el-button slot="trigger" size="small" type="primary">select file</el-button>
+                                            <div class="el-upload__tip" slot="tip">wav/mp3 files</div>
+                                    </el-upload>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <fieldset class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" style="text-align: left;">Tag</label>
+                                <div class="col-sm-10">
+                                    <input v-model="readingData.tags" type="text" class="form-control" placeholder="Comma separated tags">
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+                <hr>
+                <div class="card-header">
+                    <h4 class="card-title">Soalan</h4>
+                </div>
+                <div class="card-content">
+                    <el-collapse v-for="(qData, qIndex) in readingData.questions" :key="'q' + qIndex">
+                        <el-collapse-item :title="'Question' + qIndex + 1" :name="qIndex">
+                            <template slot="title">
+                                Soalan {% raw %}{{ qIndex + 1 }}{% endraw %}
+                                <a @click.stop="removeQuestion(qIndex)" href="#"><i class="header-icon ti-close"></i></a>                                
+                            </template>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <textarea v-model="qData.question" rows="3"
+                                                  class="form-control border-input"
+                                                  placeholder="Tulis soalan"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="choice-wrapper" v-for="(cData, cIndex) in qData.choices" :key="'c' + cIndex">
+                                        <div class="col-md-12">
+                                            <input type="radio" v-model="qData.answer" :name="'qAnswers' + qIndex" :value="cIndex">
+                                            <input type="text" v-model="cData.value" class="form-control border-input" :placeholder="'Choice ' + (cIndex+1)">
+                                            <a @click.prevent="removeChoice(qIndex, cIndex)" href="#"><i class="ti-close"></i></a>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="text-center">
+                                        <button @click="addChoice(qIndex)"
+                                                class="btn btn-wd btn-sm">
+                                            Tambah Pilihan
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center">      
+                                        <!-- <label style="margin-bottom: 0px;"> Upload Tutorial                                  -->
+                                        <input id="tutorialVideo" type="file" ref="tutorial" @change="selectTutorial(qIndex)"                                                
+                                                style="width:127%;"> 
+                                        <!-- </label>   -->
+                                    </div>
+                                </div>
+                            </div>
+                        </el-collapse-item>
+                    </el-collapse>
+                </div>
+                <div class="card-footer">
+                    <div class="text-center">
+                        <button @click="addQuestion" class="btn btn-wd btn-sm">Tambah Soalan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Details</h4>
+                </div>
+                <div class="card-content">
+                    <div class="row widget">
+                        <div class="col-md-12" style="margin-top: 15px;">
+                            <p>Status: <span v-cloak>{% raw %}{{ statusText }}{% endraw %}</span></p>
+                            <p>Last updated: <span v-if="updated" v-cloak>{% raw %}{{ updated }}{% endraw %}</span><span v-else="!updated">-</span></p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="text-center">
+
+                            <a @click="saveReading(0)" class="btn" :class="{disabled: inProgress}">Save</a>
+                            <a @click="saveReading(1)" class="btn btn-fill" :class="{disabled: inProgress}" v-if="readingData.status != null && readingData.status == 10" v-cloak>Unpublish</a>
+                            <a @click="saveReading(2)" class="btn btn-fill" :class="{disabled: inProgress}" v-else-if="readingData.status != null" v-cloak>Publish</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Kalkulator Bacaan</h4>
+                </div>
+                <div class="card-content">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Kata</label>
+                                    <input type="number" class="form-control border-input" placeholder="Kata" :value="readingData.stat.words">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Suku kata</label>
+                                    <input type="number" class="form-control border-input" placeholder="Sub-kata" :value="readingData.totalSyllable">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Ayat</label>
+                                    <input type="number" class="form-control border-input" placeholder="Kalimat" :value="readingData.totalSentence">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Skor</label>
+                                    <input type="number" class="form-control border-input" placeholder="Score" :value="readingData.score1">
+                                </div>
+                            </div>
+                            <!-- div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Score (300)</label>
+                                    <input type="number" class="form-control border-input" placeholder="Score (300)" :value="readingData.score2">
+                                </div>
+                            </div -->
+                        </div>
+
+                        <div class="row">
+                            <div class="text-center">
+                                <a @click.prevent="fillScore" class="btn">Auto-fill</a>
+                                <a @click.prevent="calculateScore" type="submit" class="btn btn-fill btn-wd">Calculate</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Statistik</h4>
+                </div>
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="table-responsive">
+                                <p v-cloak>
+                                    Jumlah kata: {%raw%}{{ readingData.stat.words }}{%endraw%}
+                                </p>
+                                <p v-cloak>
+                                    Jumlah kata (unik): {%raw%}{{ readingData.stat.unique }}{%endraw%}
+                                </p>
+                                <p v-cloak>
+                                    Kepelbagaian leksikal: {%raw%}{{readingData.stat.lexical_diversity}}{%endraw%}
+                                </p>
+                                <el-collapse v-model="widgetStat">
+                                    <el-collapse-item title="Word Occurrences" name="word_stat">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <td style="font-weight: bold;">Word</td>
+                                                    <td style="font-weight: bold;">Occurrence</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="(wordData, wordIndex) in readingData.wordList" :key="'word' + wordIndex" v-cloak>
+                                                <td>{%raw%}{{ wordData[0] }}{%endraw%}</td>
+                                                <td class="text-right">{%raw%}{{ wordData[1] }}{%endraw%}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </el-collapse-item>
+                                </el-collapse>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

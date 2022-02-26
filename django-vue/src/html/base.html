@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="MORILOLO, Singapore based Creative Technology Studio">
+	<meta name="author" content="MORILOLO Pte. Ltd.">
+    <meta name="keywords" content="MORILOLO, startup, social media, marketing, incorporation, Singapore, Taiwan, Indonesia, mobile app, website, VR, AR, IoT, development, design, creative marketing, appstore, ASO, SEO, playstore" />
+
+
+    <title>{% if data and data.title %}{{ data.title }}{% else %}Adaptive Reading Comprehension{% endif %}</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="{{ static('css/admin.css') }}">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="{{ static('js/html5shiv.js') }}"></script>
+    <script src="{{ static('js/respond.min.js') }}"></script>
+    <![endif]-->
+    {% block header_script %}{% endblock %}
+</head>
+<body>
+    {% include 'header.html' %}
+    {% block content %}{% endblock %}
+    {% include 'footer.html' %}
+    {% block footer_script %}{% endblock %}
+</body>
+</html>

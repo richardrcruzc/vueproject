@@ -1,0 +1,148 @@
+<!--{% extends 'arc/admin/base.html' %}-->
+<!--{% block content %}-->
+<!--<div id="app" class="container-fluid">-->
+    <!--<div class="row">-->
+        <!--<div class="col-md-12">-->
+            <!--<div class="card card-plain">-->
+                <!--<a href="{{ url('user-manager', kwargs={'page_action': 'add'}) }}" class="pull-right btn btn-fill btn-wd" style="margin-bottom: 20px;">Tambah Pengguna</a>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row">-->
+        <!--<div class="col-md-12">-->
+            <!--<div class="card">-->
+                <!--<div class="card-content">-->
+                    <!--<div class="bootstrap-table">-->
+                        <!--<div class="fixed-table-container" style="padding-bottom: 0px;">-->
+                            <!--<div class="fixed-table-header" style="display: none;">-->
+                                <!--<table></table>-->
+                            <!--</div>-->
+                            <!--<div class="fixed-table-body">-->
+                                <!--<table id="bootstrap-table" class="table table-hover">-->
+                                    <!--<thead>-->
+                                    <!--<tr>-->
+                                        <!--<th style="max-width: 50px;">-->
+
+                                        <!--</th>-->
+                                        <!--<th class="text-center" style="max-width: 150px;" data-field="id">-->
+                                            <!--<div class="th-inner ">ID</div>-->
+                                            <!--<div class="fht-cell"></div>-->
+                                        <!--</th>-->
+                                        <!--<th style="" data-field="type">-->
+                                            <!--<div class="th-inner sortable both">Jenis</div>-->
+                                            <!--<div class="fht-cell"></div>-->
+                                        <!--</th>-->
+                                        <!--<th style="max-width: 150px;" data-field="last_login">-->
+                                            <!--<div class="th-inner sortable both">Log Masuk Terakhir</div>-->
+                                            <!--<div class="fht-cell"></div>-->
+                                        <!--</th>-->
+                                        <!--<th class="td-actions text-right" style="max-width: 150px;" data-field="actions">-->
+                                            <!--<div class="th-inner ">Tindakan</div>-->
+                                            <!--<div class="fht-cell"></div>-->
+                                        <!--</th>-->
+                                    <!--</tr>-->
+                                    <!--</thead>-->
+                                    <!--<tbody>-->
+                                    <!--{% for user in user_data %}-->
+                                    <!--<tr data-index="">-->
+                                        <!--<td class="text-center">{{ loop.index + (pagination.number - 1) * pagination.per_page }}</td>-->
+                                        <!--<td class="text-center">{{ user.username }}</td>-->
+                                        <!--{% if user.role is defined %}-->
+                                        <!--<td style="">{% if user.role == 0%}Admin{% elif user.role == 1%}Teacher{% elif user.role == 2%}Student{% else %}Other{% endif %}</td>-->
+                                        <!--{% else %}-->
+                                        <!--<td style="">N/A</td>-->
+                                        <!--{% endif %}-->
+                                        <!--<td style="">{{ user.last_login }}</td>-->
+                                        <!--<td class="td-actions text-right" style="">-->
+                                            <!--<div class="table-icons">-->
+                                                <!--{% if user.role is defined and user.role == 2 %}-->
+                                                <!--<a rel="tooltip" title="Detail" class="btn btn-simple btn-info btn-icon table-action view"-->
+                                                    <!--href="{{ url('user-manager', kwargs={'page_action': 'detail'}) }}?id={{ user.id }}">-->
+                                                    <!--<i class="ti-bar-chart"></i></a>-->
+                                                <!--{% endif %}-->
+                                                <!--<a @click.prevent="reset({{user.id}}, '{{ user.username }}')" rel="tooltip" title="Reset kata laluan" class="btn btn-simple btn-success btn-icon table-action view"-->
+                                                    <!--href="{{ url('user-manager', kwargs={'page_action': 'reset'}) }}?id={{ user.id }}">-->
+                                                    <!--<i class="ti-unlock"></i></a>-->
+                                                <!--<a rel="tooltip" title="Edit"-->
+                                                    <!--class="btn btn-simple btn-warning btn-icon table-action edit"-->
+                                                    <!--href="{{ url('user-manager', kwargs={'page_action': 'edit'}) }}?id={{ user.id }}">-->
+                                                    <!--<i class="ti-pencil-alt"></i></a>-->
+                                                <!--<a rel="tooltip" title="Delete"-->
+                                                   <!--class="btn btn-simple btn-danger btn-icon table-action remove"-->
+                                                   <!--href="{{ url('user-manager', kwargs={'page_action': 'delete'}) }}?id={{ user.id }}&page=1">-->
+                                                    <!--<i class="ti-close"></i></a></div>-->
+                                        <!--</td>-->
+                                    <!--</tr>-->
+                                    <!--{% endfor %}-->
+                                    <!--</tbody>-->
+                                <!--</table>-->
+                            <!--</div>-->
+                            <!--<div class="fixed-table-footer" style="display: none;">-->
+                                <!--<table>-->
+                                    <!--<tbody>-->
+                                    <!--<tr></tr>-->
+                                    <!--</tbody>-->
+                                <!--</table>-->
+                            <!--</div>-->
+                            <!--<div class="fixed-table-pagination">-->
+                                <!--<div class="pull-right pagination">-->
+                                    <!--<ul class="pagination">-->
+                                        <!--<li class="page-first{% if not pagination.has_previous %} disabled{% endif %}">-->
+                                            <!--<a href="{{ url('user-list') }}?page=1{% if filter_template %}&{{ filter_template }}{% endif %}">-->
+                                                <!--<i class="fa fa-angle-double-left" aria-hidden="true"></i>-->
+                                            <!--</a>-->
+                                        <!--</li>-->
+                                        <!--<li class="page-pre{% if not pagination.has_previous %} disabled{% endif %}">-->
+                                            <!--<a href="{{ url('user-list') }}?page={{ pagination.number - 1 }}{% if filter_template %}&{{ filter_template }}{% endif %}">‹</a>-->
+                                        <!--</li>-->
+                                        <!--{% if pagination.shown_pages[0] > 1 %}-->
+                                            <!--<li class="page-number">-->
+                                                <!--<a href="{{ url('user-list') }}?page={% if filter_template %}&{{ filter_template }}{% endif %}1">1</a>-->
+                                            <!--</li>-->
+                                            <!--{% if pagination.shown_pages[0] > 2 %}-->
+                                                <!--<li class="">-->
+                                                    <!--<a href="#"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>-->
+                                                <!--</li>-->
+                                            <!--{% endif %}-->
+                                        <!--{% endif %}-->
+                                        <!--{% for page in range(pagination.shown_pages[0], pagination.shown_pages[1]+1) %}-->
+                                            <!--<li class="page-number{% if page == pagination.number %} active{% endif %}">-->
+                                                <!--<a href="{{ url('user-list') }}?page={{ page }}{% if filter_template %}&{{ filter_template }}{% endif %}">{{ page }}</a>-->
+                                            <!--</li>-->
+                                        <!--{% endfor%}-->
+                                        <!--{% if pagination.shown_pages[1] < pagination.total_page %}-->
+                                            <!--<li class="">-->
+                                                <!--<a href="#"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>-->
+                                            <!--</li>-->
+                                            <!--<li class="page-number">-->
+                                                <!--<a href="{{ url('user-list') }}?page={{ pagination.total_page }}{% if filter_template %}&{{ filter_template }}{% endif %}">{{ pagination.total_page }}</a>-->
+                                            <!--</li>-->
+                                        <!--{% endif %}-->
+                                        <!--<li class="page-next{% if not pagination.has_next %} disabled{% endif %}">-->
+                                            <!--<a href="{{ url('user-list') }}?page={{ pagination.number + 1 }}{% if filter_template %}&{{ filter_template }}{% endif %}">›</a>-->
+                                        <!--</li>-->
+                                        <!--<li class="page-last{% if not pagination.has_next %} disabled{% endif %}">-->
+                                            <!--<a href="{{ url('user-list') }}?page={{ pagination.total_page }}{% if filter_template %}&{{ filter_template }}{% endif %}">-->
+                                                <!--<i class="fa fa-angle-double-right" aria-hidden="true"></i>-->
+                                            <!--</a>-->
+                                        <!--</li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="clearfix"></div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+<!--{% endblock %}-->
+
+<!--{% block footer_script %}-->
+<!--<script src="https://unpkg.com/vue"></script>-->
+<!--<script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>-->
+
+<!--<script src="{{ static('js/user-list.js') }}?1804001"></script>-->
+<!--{% endblock %}-->

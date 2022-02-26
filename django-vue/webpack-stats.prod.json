@@ -1,0 +1,1 @@
+{"status":"done","publicPath":"/static/js/","chunks":{"admin":[{"name":"admin.js","publicPath":"/static/js/admin.js"},{"name":"admin.js.map","publicPath":"/static/js/admin.js.map"}],"student":[{"name":"student.js","publicPath":"/static/js/student.js"},{"name":"student.js.map","publicPath":"/static/js/student.js.map"}]}}

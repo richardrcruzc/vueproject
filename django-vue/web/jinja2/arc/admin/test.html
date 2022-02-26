@@ -1,0 +1,169 @@
+{% extends 'arc/admin/base.html' %}
+{% block content %}
+<div id="app" class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="card card-plain">
+                <a href="{{ url('testing-manager', kwargs={'page_action': 'add'}) }}" class="pull-right btn btn-fill btn-wd" style="margin-bottom: 20px;">Tambah Bacaan</a>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="card card-plain">
+                <button class="pull-right btn btn-wd deactivate">Deactivate</button>
+                <button class="pull-right btn btn-fill btn-wd activate" style="margin-right:20px;">Activate</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="bootstrap-table">
+                        <div class="fixed-table-container" style="padding-bottom: 0px;">
+                            <div class="fixed-table-header" style="display: none;">
+                                <table></table>
+                            </div>
+                            <div class="fixed-table-body">
+                                <table id="bootstrap-table" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center" style="max-width: 150px;" data-field="id">
+                                            <div class="th-inner ">Status</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th class="text-center" style="max-width: 150px;" data-field="id">
+                                            <div class="th-inner ">Content</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th class="text-center" style="max-width: 150px;" data-field="id">
+                                            <div class="th-inner ">Difficulty</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="" data-field="name">
+                                            <div class="th-inner sortable both">Reading title</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <!--change the result video total pages-->
+                                        <th style="" class="text-center">
+                                            <div class="th-inner sortable both">Video upload</div>
+                                            <div class="fht-cell"></div>
+                                        </th >
+                                        <th style="max-width: 150px;" data-field="salary">
+                                            <div class="th-inner sortable both">Updated</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <!-- th style="max-width: 150px;" data-field="updated">
+                                            <div class="th-inner sortable both">Last Updated</div>
+                                            <div class="fht-cell"></div>
+                                        </th -->
+                                        <th style="max-width: 150px;" data-field="created">
+                                            <div class="th-inner ">Author</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        {% if is_admin %}
+                                        <!--<th style="max-width: 150px;" data-field="created">-->
+                                            <!--<div class="th-inner ">Add in final test</div>-->
+                                            <!--<div class="fht-cell"></div>-->
+                                        <!--</th>-->
+                                        {% endif %}
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    {% for testing in testing_data %}
+                                    <tr data-index="">
+                                        <td class="text-center">{{ testing.status }}</td>
+                                        <td class="text-center" style="text-transform: uppercase;">{{ testing.problem }}</td>
+
+                                        <td class="text-center" style="">{{ testing.difficulty }}</td>
+                                        {% if testing.title %}
+                                        <td style="" title="{{ testing.r_id }}">{{ testing.title }}</td>
+                                        {% else %}
+                                        <td style="" title="{{ testing.r_id }}">{{ testing.r_id }}</td>
+                                        {% endif %}
+                                        <td>{{ testing.video_upload }}</td>
+                                        <td style="">{{ testing.updated }}</td>
+                                        {% if is_admin %}
+                                        <td style="">{{ testing.author }}</td>
+                                        {% endif %}
+                                        <!--<td class="text-center selecting">-->
+                                            <!--<input type="checkbox" value="{{testing.id}}" class="" name="q_id">-->
+                                        <!--</td>-->
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="fixed-table-footer" style="display: none;">
+                                <table>
+                                    <tbody>
+                                    <tr></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="fixed-table-pagination">
+                                <div class="pull-right pagination">
+                                    <ul class="pagination">
+                                        <li class="page-first{% if not pagination.has_previous %} disabled{% endif %}">
+                                            <a href="{{ url('test-list') }}?page=1">
+                                                <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                        <li class="page-pre{% if not pagination.has_previous %} disabled{% endif %}">
+                                            <a href="{{ url('test-list') }}?page={{ pagination.number - 1 }}">‹</a>
+                                        </li>
+                                        {% if pagination.shown_pages[0] > 1 %}
+                                            <li class="page-number">
+                                                <a href="{{ url('test-list') }}?page=1">1</a>
+                                            </li>
+                                            {% if pagination.shown_pages[0] > 2 %}
+                                                <li class="">
+                                                    <a href="#"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                                </li>
+                                            {% endif %}
+                                        {% endif %}
+                                        <!--
+                                        {% for page in range(pagination.total_page) %}
+                                            <li class="page-number{% if loop.index == pagination.number %} active{% endif %}">
+                                                <a href="{{ url('test-list') }}?page={{ loop.index }}">{{ loop.index }}</a>
+                                            </li>
+                                        {% endfor%}
+                                        -->
+                                        {% for page in range(pagination.shown_pages[0], pagination.shown_pages[1]+1) %}
+                                            <li class="page-number{% if page == pagination.number %} active{% endif %}">
+                                                <a href="{{ url('test-list') }}?page={{ page }}">{{ page }}</a>
+                                            </li>
+                                        {% endfor%}
+                                        {% if pagination.shown_pages[1] < pagination.total_page %}
+                                            <li class="">
+                                                <a href="#"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                            </li>
+                                            <li class="page-number">
+                                                <a href="{{ url('test-list') }}?page={{ pagination.total_page }}">{{ pagination.total_page }}</a>
+                                            </li>
+                                        {% endif %}
+                                        <li class="page-next{% if not pagination.has_next %} disabled{% endif %}">
+                                            <a href="{{ url('test-list') }}?page={{ pagination.number + 1 }}">›</a>
+                                        </li>
+                                        <li class="page-last{% if not pagination.has_next %} disabled{% endif %}">
+                                            <a href="{{ url('test-list') }}?page={{ pagination.total_page }}">
+                                                <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer_script %}
+<script src="{{ static('js/test_manage.js') }}?1804001"></script>
+<script src="{{ static('js/test_selecting.js') }}"></script>
+{% endblock %}

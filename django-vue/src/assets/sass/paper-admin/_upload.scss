@@ -1,0 +1,14 @@
+.file-uploader {
+    .el-button {
+        background-color: $default-color !important;
+        border-color: $default-color !important;
+    }
+
+    .el-button:hover {
+        background-color: $default-states-color !important;
+        border-color: $default-states-color !important;
+    }
+    .el-upload__input {
+        display: none;
+    }
+}

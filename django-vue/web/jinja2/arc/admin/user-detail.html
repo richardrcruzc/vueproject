@@ -1,0 +1,101 @@
+{% extends 'arc/admin/base.html' %}
+{% block header_script %}
+<!-- link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css" -->
+{% endblock %}
+
+{% block footer_script %}
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
+
+<script src="{{ static('js/user.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div id="app" class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="bootstrap-table">
+                        <div class="fixed-table-container" style="padding-bottom: 0px;">
+                            <div class="fixed-table-header" style="display: none;">
+                                <table></table>
+                            </div>
+                            <div class="fixed-table-body">
+                                <table id="bootstrap-table" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center" style="max-width: 150px;" data-field="id">
+                                            <div class="th-inner ">S/N</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th class="text-center" style="max-width: 150px;" data-field="sukaran">
+                                            <div class="th-inner ">Kesukaran</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th class="text-center" style="max-width: 150px;" data-field="sukaran">
+                                            <div class="th-inner ">Dicuba</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="max-width: 80px;" data-field="soalan">
+                                            <div class="th-inner sortable both">Soalan 1</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="max-width: 80px;" data-field="soalan">
+                                            <div class="th-inner sortable both">Soalan 2</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="max-width: 80px;" data-field="soalan">
+                                            <div class="th-inner sortable both">Soalan 3</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="max-width: 80px;" data-field="soalan">
+                                            <div class="th-inner sortable both">Soalan 4</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                        <th style="max-width: 80px;" data-field="soalan">
+                                            <div class="th-inner sortable both">Soalan 5</div>
+                                            <div class="fht-cell"></div>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for detail in student_details %}
+                                    <tr data-index="">
+                                        <td class="text-center">{{ loop.index }}</td>
+                                        <td class="text-center" style="">{{ detail.level }}</td>
+                                        <td class="text-center" style="">{{ detail.ts }}</td>
+                                        {% for quiz_detail in detail.report %}
+                                        <td style="">{{ quiz_detail.trial }}</td>
+                                        {% endfor %}
+                                        {% for filer in range(detail.report|length, 5) %}
+                                        <td style="">N/A</td>
+                                        {% endfor %}
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="fixed-table-footer" style="display: none;">
+                                <table>
+                                    <tbody>
+                                    <tr></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="text-center">
+                        <button @click="backToUserList" class="btn">Back to User List</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

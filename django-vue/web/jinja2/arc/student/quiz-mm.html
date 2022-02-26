@@ -1,0 +1,73 @@
+{% extends 'arc/student/base.html' %}
+
+{% block footer_script %}
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
+
+<script src="{{ static('js/quizmm.js') }}"></script>
+{% endblock %}
+{% block content %}
+<div id="app" class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card card-reading">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <img :src="imageUrl" v-cloak style="max-height:800px; max-width: 100%; width: 100%; height: auto; "/>
+                            <audio class="col-xs-8" id="questionAudio" ref="player" controls>
+                                <source :src="audioUrl">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <select class="col-xs-3 btn btn-wd btn-default btn-fill btn-move-right" id="speed" style="margin: 9px;">
+                                <option disabled value="1" selected>Speed</option>
+                                <option value="0.25">0.25</option>
+                                <option value="0.5">0.5</option>
+                                <option value="0.75">0.75</option>
+                                <option value="1">Normal</option>
+                                <option value="1.25">1.25</option>
+                                <option value="1.5">1.5</option>
+                                <option value="1.75">1.75</option>
+                                <option value="2">2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p v-html="readingData.reading" v-cloak></p>
+                        </div>
+                    </div>
+                    <div class="card-footer"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card card-question">
+                <div class="card-content" v-cloak>
+                    <div class="row">
+                        <p class="col-md-12" v-html="currentQuestion"></p>
+                        <div class="col-md-12">
+                            <div class="radio" v-for="(choice, loopIndex) in currentChoices">
+                                <input v-model="currentAnswer" :id="'answer-' + loopIndex" type="radio" :value="loopIndex" name="answer">
+                                <label :for="'answer-' + loopIndex">{% raw %}{{ choice.value }}{% endraw %}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="text-center">
+                                <button @click="submitAnswer" type="button" class="btn btn-wd btn-default btn-fill btn-move-right">
+                                    Jawab<span class="btn-label"><i class="ti-angle-right"></i></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
